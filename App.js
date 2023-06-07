@@ -1,3 +1,6 @@
+// start project for home network
+// npx expo start --tunnel 
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -9,7 +12,7 @@ export default function App() {
   return (
     <>
       <RegistrationScreen />
-      <LoginScreen />
+      {/* <LoginScreen /> */}
       <View>
         <StatusBar style="auto" />
       </View>
