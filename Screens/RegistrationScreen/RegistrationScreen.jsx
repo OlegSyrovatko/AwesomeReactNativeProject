@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { SvgUri } from "react-native-svg";
+
 import {
   ImageBackground,
   StyleSheet,
@@ -7,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+
 import image from "../../images/PhotoBG.png";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -18,6 +21,12 @@ const RegistrationScreen = () => {
 
   return (
     <View style={styles.container}>
+      <SvgUri
+        style={styles.svgAdd}
+        uri={require("./assets/add.svg")}
+        width={100}
+        height={100}
+      />
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.bg}>
           <Text style={styles.text}>Реєстрація</Text>
@@ -54,6 +63,7 @@ const RegistrationScreen = () => {
           </TouchableOpacity>
           <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
         </View>
+        <View style={styles.avatar}></View>
       </ImageBackground>
     </View>
   );
@@ -82,6 +92,16 @@ const styles = StyleSheet.create({
     top: 263,
     backgroundColor: "#FFFFFF",
     borderRadius: 25,
+  },
+  avatar: {
+    position: "absolute",
+    width: 120,
+    height: 120,
+    left: "50%",
+    marginLeft: -60,
+    top: 203,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 8,
   },
   text: {
     position: "absolute",
@@ -153,6 +173,13 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     color: "#1B4371",
+  },
+  svgAdd: {
+    position: "absolute",
+    width: 25,
+    height: 25,
+    left: 235,
+    top: 284,
   },
 });
 
