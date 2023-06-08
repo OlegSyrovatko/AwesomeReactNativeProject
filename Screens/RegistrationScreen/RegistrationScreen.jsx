@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { SvgUri } from "react-native-svg";
-
+import { SvgXml, Path } from "react-native-svg";
 import {
   ImageBackground,
   StyleSheet,
@@ -19,14 +18,22 @@ const RegistrationScreen = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  const svgDo = `
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12.5" cy="12.5" r="12" fill="white" stroke="#FF6C00"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M13 6H12V12H6V13H12V19H13V13H19V12H13V6Z" fill="#FF6C00"/>
+    </svg>
+  `;
+
+  const svgClose = `
+    <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18.4999" cy="18.5" r="12" transform="rotate(-45 18.4999 18.5)" fill="white" stroke="#E8E8E8"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M14.2574 13.5503L13.5503 14.2574L17.7929 18.5L13.5503 22.7426L14.2574 23.4497L18.5 19.2071L22.7426 23.4497L23.4498 22.7426L19.2071 18.5L23.4498 14.2574L22.7426 13.5503L18.5 17.7929L14.2574 13.5503Z" fill="#BDBDBD"/>
+    </svg>
+  `;
+
   return (
     <View style={styles.container}>
-      <SvgUri
-        style={styles.svgAdd}
-        uri={require("./assets/add.svg")}
-        width={100}
-        height={100}
-      />
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.bg}>
           <Text style={styles.text}>Реєстрація</Text>
@@ -64,6 +71,12 @@ const RegistrationScreen = () => {
           <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
         </View>
         <View style={styles.avatar}></View>
+        <SvgXml
+          style={styles.avatarButton}
+          width="25"
+          height="25"
+          xml={svgDo}
+        />
       </ImageBackground>
     </View>
   );
@@ -102,6 +115,13 @@ const styles = StyleSheet.create({
     top: 203,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
+  },
+  avatarButton: {
+    position: "absolute",
+    width: 25,
+    height: 25,
+    left: 253,
+    top: 284,
   },
   text: {
     position: "absolute",
@@ -173,13 +193,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     color: "#1B4371",
-  },
-  svgAdd: {
-    position: "absolute",
-    width: 25,
-    height: 25,
-    left: 235,
-    top: 284,
   },
 });
 

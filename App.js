@@ -6,14 +6,14 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import RegistrationScreen from './Screens/RegistrationScreen';
 import LoginScreen from './Screens/LoginScreen';
-import SvgIcon from './Screens/SvgIcon';
+
 
 export default function App() {
   return (
     <>
       <RegistrationScreen />
       {/* <LoginScreen /> */}
-      {/* <SvgIcon /> */}
+
       <View>
         <StatusBar style="auto" />
       </View>
