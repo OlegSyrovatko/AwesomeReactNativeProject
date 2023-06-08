@@ -1,23 +1,58 @@
+import React, { useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
   Text,
   View,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import image from "../../images/PhotoBG.png";
+import { FontAwesome } from "@expo/vector-icons";
 
 const RegistrationScreen = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.bg}>
           <Text style={styles.text}>Реєстрація</Text>
           <TextInput
-            style={[styles.login, { paddingLeft: 16, fontSize: 16 }]}
+            style={[styles.input, { paddingLeft: 16, fontSize: 16, top: 160 }]}
             placeholder="Логін"
             placeholderTextColor="#BDBDBD"
           ></TextInput>
+          <TextInput
+            style={[styles.input, { paddingLeft: 16, fontSize: 16, top: 226 }]}
+            placeholder="Адреса електронної пошти"
+            placeholderTextColor="#BDBDBD"
+          ></TextInput>
+          <TextInput
+            style={[styles.input, { paddingLeft: 16, fontSize: 16, top: 292 }]}
+            placeholder="Пароль"
+            type="password"
+            secureTextEntry={!passwordVisible}
+            placeholderTextColor="#BDBDBD"
+          ></TextInput>
+          <TouchableOpacity
+            onPress={togglePasswordVisibility}
+            style={{ position: "absolute", right: 10, top: 305 }}
+          >
+            <FontAwesome
+              name={passwordVisible ? "eye" : "eye-slash"}
+              size={24}
+              color="#BDBDBD"
+              style={[{ marginRight: 20 }]}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Зареєструватися</Text>
+          </TouchableOpacity>
+          <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
         </View>
       </ImageBackground>
     </View>
@@ -65,11 +100,10 @@ const styles = StyleSheet.create({
 
     color: "#212121",
   },
-  login: {
+  input: {
     position: "absolute",
     left: 16,
     right: 0,
-    top: 160,
     bottom: 0,
     width: 343,
     height: 50,
@@ -77,6 +111,48 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
+  },
+  button: {
+    position: "absolute",
+    left: 16,
+    right: 16,
+    height: 51,
+    top: 385,
+    bottom: 179,
+    width: 343,
+    height: 50,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    gap: 12,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+  },
+  buttonText: {
+    width: 120,
+    height: 19,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
+  },
+  textLogin: {
+    position: "absolute",
+    width: 159,
+    height: 19,
+    left: 108,
+    bottom: 78,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    textAlign: "center",
+    color: "#1B4371",
   },
 });
 
