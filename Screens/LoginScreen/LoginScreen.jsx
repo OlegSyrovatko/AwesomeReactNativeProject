@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import {
   ImageBackground,
   StyleSheet,
@@ -16,6 +18,10 @@ import image from "../../assets/PhotoBG.png";
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const navigation = useNavigation();
+  const goToReg = () => {
+    navigation.navigate("Main");
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -76,7 +82,9 @@ const LoginScreen = () => {
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
-            <Text style={styles.textLogin}>Немає акаунту? Зареєструватися</Text>
+            <Text style={styles.textLogin} onPress={goToReg}>
+              Немає акаунту? Зареєструватися
+            </Text>
           </View>
         </View>
       </ImageBackground>

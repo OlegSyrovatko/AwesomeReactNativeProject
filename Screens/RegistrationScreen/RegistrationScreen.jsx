@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import {
   ImageBackground,
   StyleSheet,
@@ -10,6 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
+
 const { width, height } = Dimensions.get("window");
 import image from "../../assets/PhotoBG.png";
 import avatarIcon from "../../assets/avatarIcon.png";
@@ -17,6 +20,10 @@ import avatarIcon from "../../assets/avatarIcon.png";
 const RegistrationScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const navigation = useNavigation();
+  const goToLogin = () => {
+    navigation.navigate("Login");
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -85,7 +92,9 @@ const RegistrationScreen = () => {
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Зареєструватися</Text>
             </TouchableOpacity>
-            <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
+            <Text style={styles.textLogin} onPress={goToLogin}>
+              Вже є акаунт? Увійти
+            </Text>
             <View style={styles.avatar}>
               {isKeyboardOpen && (
                 <ImageBackground
