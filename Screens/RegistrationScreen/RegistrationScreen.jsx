@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { SvgXml, Path } from "react-native-svg";
+import React, { useState, useEffect } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -7,76 +6,114 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Keyboard,
+  KeyboardEvent,
+  Dimensions,
 } from "react-native";
-
-import image from "../../images/PhotoBG.png";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
+const { width, height } = Dimensions.get("window");
+import image from "../../assets/PhotoBG.png";
+import avatarIcon from "../../assets/avatarIcon.png";
 
 const RegistrationScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const svgDo = `
-    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12.5" cy="12.5" r="12" fill="white" stroke="#FF6C00"/>
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M13 6H12V12H6V13H12V19H13V13H19V12H13V6Z" fill="#FF6C00"/>
-    </svg>
-  `;
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setIsKeyboardOpen(true)
+    );
 
-  const svgClose = `
-    <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="18.4999" cy="18.5" r="12" transform="rotate(-45 18.4999 18.5)" fill="white" stroke="#E8E8E8"/>
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M14.2574 13.5503L13.5503 14.2574L17.7929 18.5L13.5503 22.7426L14.2574 23.4497L18.5 19.2071L22.7426 23.4497L23.4498 22.7426L19.2071 18.5L23.4498 14.2574L22.7426 13.5503L18.5 17.7929L14.2574 13.5503Z" fill="#BDBDBD"/>
-    </svg>
-  `;
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setIsKeyboardOpen(false)
+    );
+
+    // Clean up listeners when the component unmounts
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <View style={styles.bg}>
-          <Text style={styles.text}>Реєстрація</Text>
-          <TextInput
-            style={[styles.input, { paddingLeft: 16, fontSize: 16, top: 160 }]}
-            placeholder="Логін"
-            placeholderTextColor="#BDBDBD"
-          ></TextInput>
-          <TextInput
-            style={[styles.input, { paddingLeft: 16, fontSize: 16, top: 226 }]}
-            placeholder="Адреса електронної пошти"
-            placeholderTextColor="#BDBDBD"
-          ></TextInput>
-          <TextInput
-            style={[styles.input, { paddingLeft: 16, fontSize: 16, top: 292 }]}
-            placeholder="Пароль"
-            type="password"
-            secureTextEntry={!passwordVisible}
-            placeholderTextColor="#BDBDBD"
-          ></TextInput>
-          <TouchableOpacity
-            onPress={togglePasswordVisibility}
-            style={{ position: "absolute", right: 10, top: 305 }}
-          >
-            <FontAwesome
-              name={passwordVisible ? "eye" : "eye-slash"}
-              size={24}
-              color="#BDBDBD"
-              style={[{ marginRight: 20 }]}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Зареєструватися</Text>
-          </TouchableOpacity>
-          <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
+        <View style={styles.overlay}>
+          <View style={[styles.bg, isKeyboardOpen && styles.bgOpen]}>
+            <Text style={styles.text}>Реєстрація</Text>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 160 },
+              ]}
+              placeholder="Логін"
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 226 },
+              ]}
+              placeholder="Адреса електронної пошти"
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 292 },
+              ]}
+              placeholder="Пароль"
+              type="password"
+              secureTextEntry={!passwordVisible}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={{ position: "absolute", right: 10, top: 305 }}
+            >
+              <FontAwesome
+                name={passwordVisible ? "eye" : "eye-slash"}
+                size={24}
+                color="#BDBDBD"
+                style={[{ marginRight: 20 }]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Зареєструватися</Text>
+            </TouchableOpacity>
+            <Text style={styles.textLogin}>Вже є акаунт? Увійти</Text>
+            <View style={styles.avatar}>
+              {isKeyboardOpen && (
+                <ImageBackground
+                  source={avatarIcon}
+                  resizeMode="cover"
+                  style={styles.imageAvatar}
+                ></ImageBackground>
+              )}
+              {isKeyboardOpen ? (
+                <AntDesign
+                  style={styles.avatarIcon}
+                  name="closecircleo"
+                  size={25}
+                  color="#E8E8E8"
+                />
+              ) : (
+                <AntDesign
+                  style={styles.avatarIcon}
+                  name="pluscircleo"
+                  size={25}
+                  color="#FF6C00"
+                />
+              )}
+            </View>
+          </View>
         </View>
-        <View style={styles.avatar}></View>
-        <SvgXml
-          style={styles.avatarButton}
-          width="25"
-          height="25"
-          xml={svgDo}
-        />
       </ImageBackground>
     </View>
   );
@@ -84,7 +121,6 @@ const RegistrationScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
@@ -92,9 +128,14 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    justifyContent: "center",
-    width: "100%",
+    height: height,
+  },
+  overlay: {
+    width: width,
     height: "100%",
+  },
+  imageKb: {
+    top: 100,
   },
   bg: {
     position: "absolute",
@@ -106,22 +147,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 25,
   },
+  bgOpen: {
+    top: 147,
+  },
   avatar: {
     position: "absolute",
     width: 120,
     height: 120,
     left: "50%",
+    marginTop: -60,
     marginLeft: -60,
-    top: 203,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
   },
-  avatarButton: {
+  imageAvatar: {
+    width: "100%",
+    height: "100%",
+  },
+  avatarIcon: {
     position: "absolute",
     width: 25,
     height: 25,
-    left: 253,
-    top: 284,
+    left: 108,
+    top: 76,
   },
   text: {
     position: "absolute",

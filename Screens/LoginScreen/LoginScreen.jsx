@@ -1,7 +1,7 @@
 // import React from 'react';
 
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import image from "../../images/PhotoBG.png";
+import image from "../../assets/PhotoBG.png";
 
 // import { useSelector, useDispatch } from 'react-redux';
 // import { setStatusFilter } from 'redux/filtersSlice';
