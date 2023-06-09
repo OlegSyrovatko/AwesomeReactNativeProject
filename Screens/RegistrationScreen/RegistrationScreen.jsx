@@ -7,7 +7,6 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-  KeyboardEvent,
   Dimensions,
 } from "react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
@@ -34,7 +33,6 @@ const RegistrationScreen = () => {
       () => setIsKeyboardOpen(false)
     );
 
-    // Clean up listeners when the component unmounts
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
@@ -219,8 +217,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   buttonText: {
-    width: 120,
-    height: 19,
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: 400,

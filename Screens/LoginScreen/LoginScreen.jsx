@@ -1,22 +1,84 @@
-// import React from 'react';
-
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+  Dimensions,
+} from "react-native";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
+const { width, height } = Dimensions.get("window");
 import image from "../../assets/PhotoBG.png";
 
-// import { useSelector, useDispatch } from 'react-redux';
-// import { setStatusFilter } from 'redux/filtersSlice';
-// import { getFilter } from 'redux/selectors';
-// import { Find } from './Filter.styled';
-// import MenuItem from '@mui/material/MenuItem';
-// import Select from '@mui/material/Select';
-// import InputLabel from '@mui/material/InputLabel';
-// import FormControl from '@mui/material/FormControl';
-
 const LoginScreen = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setIsKeyboardOpen(true)
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setIsKeyboardOpen(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <Text>LoginScreen</Text>
+        <View style={styles.overlay}>
+          <View style={[styles.bg, isKeyboardOpen && styles.bgOpen]}>
+            <Text style={styles.text}>Увійти</Text>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 100 },
+              ]}
+              placeholder="Адреса електронної пошти"
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 166 },
+              ]}
+              placeholder="Пароль"
+              type="password"
+              secureTextEntry={!passwordVisible}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={{ position: "absolute", right: 10, top: 180 }}
+            >
+              <FontAwesome
+                name={passwordVisible ? "eye" : "eye-slash"}
+                size={24}
+                color="#BDBDBD"
+                style={[{ marginRight: 20 }]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Увійти</Text>
+            </TouchableOpacity>
+            <Text style={styles.textLogin}>Немає акаунту? Зареєструватися</Text>
+          </View>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -31,17 +93,98 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    justifyContent: "center",
-    width: "100%",
+    height: height,
+  },
+  overlay: {
+    width: width,
     height: "100%",
   },
+  imageKb: {
+    top: 100,
+  },
+  bg: {
+    position: "absolute",
+    width: 375,
+    height: 549,
+    left: "50%",
+    marginLeft: -187.5,
+    top: 323,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 25,
+  },
+  bgOpen: {
+    top: 273,
+  },
   text: {
-    color: "white",
-    fontSize: 42,
-    lineHeight: 84,
-    fontWeight: "bold",
+    position: "absolute",
+    width: 160,
+    height: 35,
+    left: 108,
+    top: 32,
+
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 500,
+    fontSize: 30,
+    lineHeight: 35,
     textAlign: "center",
-    backgroundColor: "#000000c0",
+    letterSpacing: 0.01,
+
+    color: "#212121",
+  },
+  input: {
+    position: "absolute",
+    left: 16,
+    right: 0,
+    bottom: 0,
+    width: 343,
+    height: 50,
+    backgroundColor: "#F6F6F6",
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 8,
+  },
+  button: {
+    position: "absolute",
+    left: 16,
+    right: 16,
+    height: 51,
+    top: 259,
+    bottom: 179,
+    width: 343,
+    height: 50,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    gap: 12,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+  },
+  buttonText: {
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
+  },
+  textLogin: {
+    position: "absolute",
+    // width: 159,
+    height: 19,
+    // left: 108,
+    left: "50%",
+    marginLeft: -126,
+    top: 326,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    textAlign: "center",
+    color: "#1B4371",
   },
 });
 
