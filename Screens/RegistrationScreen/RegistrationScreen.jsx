@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 
 import {
   ImageBackground,
@@ -18,14 +17,13 @@ const { width, height } = Dimensions.get("window");
 import image from "../../assets/PhotoBG.png";
 import avatarIcon from "../../assets/avatarIcon.png";
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [lgn, setLgn] = useState("");
   const [eml, setEml] = useState("");
   const [pwd, setPwd] = useState("");
 
-  const navigation = useNavigation();
   const goToLogin = () => {
     navigation.navigate("Login");
   };
@@ -53,6 +51,7 @@ const RegistrationScreen = () => {
 
   const onReg = () => {
     console.log("Credentials", `${lgn} + ${eml} + ${pwd}`);
+    navigation.navigate("Home");
   };
 
   return (

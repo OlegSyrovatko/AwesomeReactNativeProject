@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 
 import {
   ImageBackground,
@@ -12,16 +12,16 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from "react-native";
-import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 import image from "../../assets/PhotoBG.png";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [eml, setEml] = useState("");
   const [pwd, setPwd] = useState("");
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const goToReg = () => {
     navigation.navigate("Main");
   };
@@ -49,6 +49,7 @@ const LoginScreen = () => {
 
   const onLogin = () => {
     console.log("Credentials", `${eml} + ${pwd}`);
+    navigation.navigate("Home");
   };
 
   return (
