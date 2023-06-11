@@ -8,12 +8,12 @@ const PostsScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.common}>
+    <View style={styles.container}>
       <MaterialIcons
-        style={styles.logout}
+        style={styles.back}
         name="logout"
         size={24}
-        color="#BDBDBD"
+        color="rgba(189, 189, 189, 1)"
         onPress={goToLogin}
       />
       <Text style={styles.title}>Публікації</Text>
@@ -22,7 +22,7 @@ const PostsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  common: { marginTop: 55 },
+  container: { marginTop: 55 },
   title: {
     position: "absolute",
     height: 22,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 
     color: "#212121",
   },
-  logout: {
+  back: {
     position: "absolute",
     left: "89.33%",
     right: "4.27%",

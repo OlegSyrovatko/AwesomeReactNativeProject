@@ -1,18 +1,237 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
+
 const CreatePostsScreen = () => {
+  const navigation = useNavigation();
+  const goBack = () => {
+    navigation.goBack();
+  };
+  const [namePhoto, setNamePhoto] = useState("");
+  const [locality, setLocality] = useState("");
+  const [cameraRef, setCameraRef] = useState(null);
+  const type = Camera.Constants.Type.back;
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.getBackgroundPermissionsAsync();
+      if (status !== "granted") {
+        return <Text>No access to camera</Text>;
+      }
+      await MediaLibrary.requestPermissionsAsync();
+    })();
+  }, []);
+  const onSubmit = () => {
+    console.log(cameraRef);
+    console.log("Credentials", `${locality} + ${namePhoto} + ${cameraRef}`);
+    // navigation.navigate("Home");
+  };
   return (
     <View style={styles.container}>
-      <Text>Create Posts Screen</Text>
+      <MaterialIcons
+        style={styles.logout}
+        name="arrow-back"
+        size={24}
+        color="rgba(33, 33, 33, 0.8)"
+        onPress={goBack}
+      />
+      <Text style={styles.title}>Створити публікацію</Text>
+      <View style={styles.line} />
+      <Camera style={styles.cameraContainer} type={type} ref={setCameraRef}>
+        <View style={styles.cameraRound}>
+          <TouchableOpacity>
+            <MaterialIcons
+              style={styles.camera}
+              name="camera-alt"
+              size={24}
+              color="#BDBDBD"
+              onPress={async () => {
+                if (cameraRef) {
+                  const { uri } = await cameraRef.takePictureAsync();
+                  await MediaLibrary.createAssetAsync(uri);
+                }
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </Camera>
+      <Text style={styles.text}>Завантажте фото</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      >
+        <TextInput
+          style={[styles.input, { fontSize: 16, marginTop: 48 }]}
+          placeholder="Назва..."
+          value={namePhoto}
+          onChangeText={setNamePhoto}
+          placeholderTextColor="#BDBDBD"
+        ></TextInput>
+      </KeyboardAvoidingView>
+      <View style={styles.lineInput} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      >
+        <TextInput
+          style={[
+            styles.input,
+            { fontSize: 16, marginTop: 32, paddingLeft: 30 },
+          ]}
+          placeholder="Місцевість..."
+          value={locality}
+          onChangeText={setLocality}
+          placeholderTextColor="#BDBDBD"
+        ></TextInput>
+      </KeyboardAvoidingView>
+      <MaterialIcons
+        style={styles.localIcon}
+        name="location-pin"
+        size={24}
+        color="rgba(189, 189, 189, 1)"
+      />
+      <View style={styles.lineInput} />
+
+      <TouchableOpacity style={styles.button} onPress={onSubmit}>
+        <Text style={styles.buttonText}>Опублікувати</Text>
+      </TouchableOpacity>
+
+      <View style={styles.trash}>
+        <Feather name="trash-2" size={24} color="#DADADA" />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#ffffff",
+    marginTop: 55,
+    flex: 1,
+    alignItems: "center",
+  },
+  title: {
+    position: "absolute",
+    height: 22,
+    left: 48,
+    right: 49,
+    top: 11,
+
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 500,
+    fontSize: 17,
+    lineHeight: 22,
+
+    textAlign: "center",
+    letterSpacing: -0.408,
+
+    color: "#212121",
+  },
+  logout: {
+    position: "absolute",
+    right: "89.33%",
+    left: "4.27%",
+    top: 10,
+  },
+  line: {
+    marginTop: 50,
+    position: "absolute",
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    width: "100%",
+  },
+  cameraContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    position: "absolute",
+    width: 343,
+    height: 240,
+    left: "50%",
+    marginLeft: -172,
+    top: 82,
+    backgroundColor: "rgba(232, 232, 232, 1)",
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 8,
+  },
+  cameraRound: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 30,
+  },
+  camera: {
+    left: "50%",
+    marginLeft: -12,
+    marginTop: 17,
+    zIndex: 1,
+  },
+  text: {
+    marginTop: 330,
+    width: 343,
+    marginLeft: 0,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#BDBDBD",
+  },
+  input: {
+    width: 343,
+  },
+  lineInput: {
+    marginTop: 15,
+    width: 343,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+  },
+  localIcon: {
+    marginTop: -25,
+    width: 343,
+    marginLeft: 0,
+    zIndex: -1,
+  },
+
+  button: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 32,
+    height: 51,
+    width: 343,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+  },
+  buttonText: {
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
+  },
+  trash: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    width: 70,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 20,
+    marginTop: 100,
   },
 });
 
