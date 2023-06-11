@@ -13,6 +13,8 @@ const Home = () => {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           let style;
@@ -33,9 +35,6 @@ const Home = () => {
           );
         },
       })}
-      tabBarOptions={{
-        showLabel: false,
-      }}
     >
       <Tabs.Screen name="Posts" component={PostsScreen} />
       <Tabs.Screen name="Create Post" component={CreatePostsScreen} />

@@ -8,7 +8,7 @@ const PostsScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={styles.common}>
       <MaterialIcons
         style={styles.logout}
         name="logout"
@@ -22,6 +22,7 @@ const PostsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  common: { marginTop: 55 },
   title: {
     position: "absolute",
     height: 22,
