@@ -22,17 +22,31 @@ const CreatePostsScreen = () => {
   const [namePhoto, setNamePhoto] = useState("");
   const [locality, setLocality] = useState("");
   const [cameraRef, setCameraRef] = useState(null);
-  const type = Camera.Constants.Type.back;
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.getBackgroundPermissionsAsync();
-      if (status !== "granted") {
-        return <Text>No access to camera</Text>;
-      }
+      const { status } = await Camera.requestPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
+
+      // const { status } = await Location.getBackgroundPermissionsAsync();
+      // if (status !== "granted") {
+      //   console.log("No access to camera");
+      //   return <Text>No access to camera</Text>;
+      // }
+      setHasPermission(status === "granted");
     })();
   }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   const onSubmit = () => {
     console.log(cameraRef);
     console.log("Credentials", `${locality} + ${namePhoto} + ${cameraRef}`);
@@ -49,6 +63,7 @@ const CreatePostsScreen = () => {
       />
       <Text style={styles.title}>Створити публікацію</Text>
       <View style={styles.line} />
+
       <Camera style={styles.cameraContainer} type={type} ref={setCameraRef}>
         <View style={styles.cameraRound}>
           <TouchableOpacity>
@@ -151,6 +166,7 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     width: "100%",
   },
+
   cameraContainer: {
     flex: 1,
     alignItems: "center",
@@ -171,6 +187,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: "#FFFFFF",
     borderRadius: 30,
+    zIndex: 1,
   },
   camera: {
     left: "50%",
