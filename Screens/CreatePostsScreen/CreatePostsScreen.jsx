@@ -28,14 +28,10 @@ const CreatePostsScreen = () => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      await MediaLibrary.requestPermissionsAsync();
-
-      // const { status } = await Location.getBackgroundPermissionsAsync();
-      // if (status !== "granted") {
-      //   console.log("No access to camera");
-      //   return <Text>No access to camera</Text>;
-      // }
+      const { status } = await Location.requestBackgroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("No access to camera");
+      }
       setHasPermission(status === "granted");
     })();
   }, []);
