@@ -1,11 +1,38 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PostsScreen = ({ navigation }) => {
   const goToLogin = () => {
     navigation.navigate("Login");
   };
+
+  const route = useRoute();
+  let NamePic;
+  let localityPic;
+  let latitude;
+  let longitude;
+  let urlPic;
+  if (route.params) {
+    if (route.params.namePhoto) {
+      NamePic = route.params.namePhoto;
+    }
+    if (route.params.locality) {
+      localityPic = route.params.locality;
+    }
+    if (route.params.location) {
+      latitude = route.params.location.coords.latitude;
+      longitude = route.params.location.coords.longitude;
+    }
+    if (route.params.urlPhoto) {
+      urlPic = route.params.urlPhoto;
+    }
+  }
+
+  // const {
+  //   params: { namePhoto, locality, location, urlPhoto },
+  // } = useRoute();
 
   return (
     <View style={styles.container}>
@@ -17,6 +44,13 @@ const PostsScreen = ({ navigation }) => {
         onPress={goToLogin}
       />
       <Text style={styles.title}>Публікації</Text>
+      <Text>NamePic {NamePic}</Text>
+      <Text>localityPic {localityPic}</Text>
+      <Text>
+        latitude {latitude}
+        longitude {longitude}
+      </Text>
+      <Text>urlPic {urlPic}</Text>
     </View>
   );
 };

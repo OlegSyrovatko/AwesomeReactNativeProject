@@ -24,7 +24,6 @@ const CreatePostsScreen = () => {
   const [locality, setLocality] = useState("");
   const [urlPhoto, setUrlPhoto] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
-  const [location, setLocation] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const type = Camera.Constants.Type.back;
 
@@ -36,12 +35,6 @@ const CreatePostsScreen = () => {
       }
 
       setHasPermission(status === "granted");
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
     })();
   }, []);
 
@@ -52,12 +45,19 @@ const CreatePostsScreen = () => {
     return <Text>No access to camera</Text>;
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    let location = await Location.getCurrentPositionAsync({});
+    console.log(location);
     console.log("Credentials", `${locality} + ${namePhoto} `);
-    console.log("Credentials", `${location.latitude} + ${location.longitude} `);
+    console.log(location.coords.latitude);
+    console.log(location.coords.longitude);
     console.log(urlPhoto);
-
-    // navigation.navigate("Home");
+    navigation.navigate("Posts", {
+      namePhoto,
+      locality,
+      location,
+      urlPhoto,
+    });
   };
 
   return (
@@ -135,6 +135,7 @@ const CreatePostsScreen = () => {
       <TouchableOpacity
         onPress={() => {
           setUrlPhoto(null);
+          setCameraRef(null);
         }}
       >
         <View style={styles.trash}>
