@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Image,
   View,
   Text,
   TextInput,
@@ -13,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+import url from "../../assets/avatarIcon.png";
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
@@ -21,10 +23,11 @@ const CreatePostsScreen = () => {
   };
   const [namePhoto, setNamePhoto] = useState("");
   const [locality, setLocality] = useState("");
+  const [urlPhoto, setUrlPhoto] = useState(url);
   const [cameraRef, setCameraRef] = useState(null);
-
+  const [location, setLocation] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const type = Camera.Constants.Type.back;
 
   useEffect(() => {
     (async () => {
@@ -32,7 +35,14 @@ const CreatePostsScreen = () => {
       if (status !== "granted") {
         console.log("No access to camera");
       }
+
       setHasPermission(status === "granted");
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
     })();
   }, []);
 
@@ -44,8 +54,10 @@ const CreatePostsScreen = () => {
   }
 
   const onSubmit = () => {
-    console.log(cameraRef);
-    console.log("Credentials", `${locality} + ${namePhoto} + ${cameraRef}`);
+    console.log("Credentials", `${locality} + ${namePhoto} `);
+    console.log("Credentials", `${location.latitude} + ${location.longitude} `);
+    console.log(urlPhoto);
+
     // navigation.navigate("Home");
   };
   return (
@@ -71,7 +83,9 @@ const CreatePostsScreen = () => {
               onPress={async () => {
                 if (cameraRef) {
                   const { uri } = await cameraRef.takePictureAsync();
-                  await MediaLibrary.createAssetAsync(uri);
+
+                  // await MediaLibrary.createAssetAsync(uri);
+                  setUrlPhoto(uri);
                 }
               }}
             />
@@ -112,7 +126,7 @@ const CreatePostsScreen = () => {
         color="rgba(189, 189, 189, 1)"
       />
       <View style={styles.lineInput} />
-
+      <Image source={{ uri: urlPhoto }} style={styles.image}></Image>
       <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text style={styles.buttonText}>Опублікувати</Text>
       </TouchableOpacity>
@@ -125,6 +139,11 @@ const CreatePostsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  image: {
+    marginTop: 5,
+    width: 30,
+    height: 30,
+  },
   container: {
     backgroundColor: "#ffffff",
     marginTop: 55,
