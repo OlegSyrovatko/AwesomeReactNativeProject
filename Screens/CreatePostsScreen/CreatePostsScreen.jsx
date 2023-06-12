@@ -14,7 +14,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
-import url from "../../assets/avatarIcon.png";
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
@@ -23,7 +22,7 @@ const CreatePostsScreen = () => {
   };
   const [namePhoto, setNamePhoto] = useState("");
   const [locality, setLocality] = useState("");
-  const [urlPhoto, setUrlPhoto] = useState(url);
+  const [urlPhoto, setUrlPhoto] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [location, setLocation] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
@@ -60,6 +59,7 @@ const CreatePostsScreen = () => {
 
     // navigation.navigate("Home");
   };
+
   return (
     <View style={styles.container}>
       <MaterialIcons
@@ -84,13 +84,14 @@ const CreatePostsScreen = () => {
                 if (cameraRef) {
                   const { uri } = await cameraRef.takePictureAsync();
 
-                  // await MediaLibrary.createAssetAsync(uri);
+                  await MediaLibrary.createAssetAsync(uri);
                   setUrlPhoto(uri);
                 }
               }}
             />
           </TouchableOpacity>
         </View>
+        <Image source={{ uri: urlPhoto }} style={styles.image}></Image>
       </Camera>
       <Text style={styles.text}>Завантажте фото</Text>
       <KeyboardAvoidingView
@@ -126,23 +127,32 @@ const CreatePostsScreen = () => {
         color="rgba(189, 189, 189, 1)"
       />
       <View style={styles.lineInput} />
-      <Image source={{ uri: urlPhoto }} style={styles.image}></Image>
+
       <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text style={styles.buttonText}>Опублікувати</Text>
       </TouchableOpacity>
 
-      <View style={styles.trash}>
-        <Feather name="trash-2" size={24} color="#DADADA" />
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          setUrlPhoto(null);
+        }}
+      >
+        <View style={styles.trash}>
+          <Feather name="trash-2" size={24} color="#DADADA" />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   image: {
-    marginTop: 5,
-    width: 30,
-    height: 30,
+    position: "absolute",
+    marginTop: -31,
+    width: 343,
+    height: 240,
+    top: 30,
+    zIndex: -1,
   },
   container: {
     backgroundColor: "#ffffff",
