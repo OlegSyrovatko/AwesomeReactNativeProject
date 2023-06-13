@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Keyboard,
   Dimensions,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 
@@ -57,89 +56,87 @@ const RegistrationScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.overlay}>
-            <View style={[styles.bg, isKeyboardOpen && styles.bgOpen]}>
-              <Text style={styles.text}>Реєстрація</Text>
+        <View style={styles.overlay}>
+          <View style={[styles.bg, isKeyboardOpen && styles.bgOpen]}>
+            <Text style={styles.text}>Реєстрація</Text>
 
-              <TextInput
-                style={[
-                  styles.input,
-                  { paddingLeft: 16, fontSize: 16, top: 160 },
-                ]}
-                placeholder="Логін"
-                value={lgn}
-                onChangeText={setLgn}
-                placeholderTextColor="#BDBDBD"
-              ></TextInput>
-              <TextInput
-                style={[
-                  styles.input,
-                  { paddingLeft: 16, fontSize: 16, top: 226 },
-                ]}
-                placeholder="Адреса електронної пошти"
-                value={eml}
-                onChangeText={setEml}
-                placeholderTextColor="#BDBDBD"
-              ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 160 },
+              ]}
+              placeholder="Логін"
+              value={lgn}
+              onChangeText={setLgn}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 226 },
+              ]}
+              placeholder="Адреса електронної пошти"
+              value={eml}
+              onChangeText={setEml}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
 
-              <TextInput
-                style={[
-                  styles.input,
-                  { paddingLeft: 16, fontSize: 16, top: 292 },
-                ]}
-                placeholder="Пароль"
-                value={pwd}
-                onChangeText={setPwd}
-                type="password"
-                secureTextEntry={!passwordVisible}
-                placeholderTextColor="#BDBDBD"
-              ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 292 },
+              ]}
+              placeholder="Пароль"
+              value={pwd}
+              onChangeText={setPwd}
+              type="password"
+              secureTextEntry={!passwordVisible}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
 
-              <TouchableOpacity
-                onPress={togglePasswordVisibility}
-                style={{ position: "absolute", right: 10, top: 305 }}
-              >
-                <FontAwesome
-                  name={passwordVisible ? "eye" : "eye-slash"}
-                  size={24}
-                  color="#BDBDBD"
-                  style={[{ marginRight: 20 }]}
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={{ position: "absolute", right: 10, top: 305 }}
+            >
+              <FontAwesome
+                name={passwordVisible ? "eye" : "eye-slash"}
+                size={24}
+                color="#BDBDBD"
+                style={[{ marginRight: 20 }]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={onReg}>
+              <Text style={styles.buttonText}>Зареєструватися</Text>
+            </TouchableOpacity>
+            <Text style={styles.textLogin} onPress={goToLogin}>
+              Вже є акаунт? Увійти
+            </Text>
+            <View style={styles.avatar}>
+              {isKeyboardOpen && (
+                <ImageBackground
+                  source={avatarIcon}
+                  resizeMode="cover"
+                  style={styles.imageAvatar}
+                ></ImageBackground>
+              )}
+              {isKeyboardOpen ? (
+                <AntDesign
+                  style={styles.avatarIcon}
+                  name="closecircleo"
+                  size={25}
+                  color="#E8E8E8"
                 />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={onReg}>
-                <Text style={styles.buttonText}>Зареєструватися</Text>
-              </TouchableOpacity>
-              <Text style={styles.textLogin} onPress={goToLogin}>
-                Вже є акаунт? Увійти
-              </Text>
-              <View style={styles.avatar}>
-                {isKeyboardOpen && (
-                  <ImageBackground
-                    source={avatarIcon}
-                    resizeMode="cover"
-                    style={styles.imageAvatar}
-                  ></ImageBackground>
-                )}
-                {isKeyboardOpen ? (
-                  <AntDesign
-                    style={styles.avatarIcon}
-                    name="closecircleo"
-                    size={25}
-                    color="#E8E8E8"
-                  />
-                ) : (
-                  <AntDesign
-                    style={styles.avatarIcon}
-                    name="pluscircleo"
-                    size={25}
-                    color="#FF6C00"
-                  />
-                )}
-              </View>
+              ) : (
+                <AntDesign
+                  style={styles.avatarIcon}
+                  name="pluscircleo"
+                  size={25}
+                  color="#FF6C00"
+                />
+              )}
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </ImageBackground>
     </View>
   );

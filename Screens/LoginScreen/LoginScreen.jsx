@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import { useNavigation } from "@react-navigation/native";
 
 import {
   ImageBackground,
@@ -10,7 +9,6 @@ import {
   TouchableOpacity,
   Keyboard,
   Dimensions,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
@@ -21,7 +19,7 @@ const LoginScreen = ({ navigation }) => {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [eml, setEml] = useState("");
   const [pwd, setPwd] = useState("");
-  // const navigation = useNavigation();
+
   const goToReg = () => {
     navigation.navigate("Main");
   };
@@ -55,52 +53,50 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.overlay}>
-            <View style={[styles.bg, isKeyboardOpen && styles.bgOpen]}>
-              <Text style={styles.text}>Увійти</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  { paddingLeft: 16, fontSize: 16, top: 100 },
-                ]}
-                placeholder="Адреса електронної пошти"
-                value={eml}
-                onChangeText={setEml}
-                placeholderTextColor="#BDBDBD"
-              ></TextInput>
-              <TextInput
-                style={[
-                  styles.input,
-                  { paddingLeft: 16, fontSize: 16, top: 166 },
-                ]}
-                placeholder="Пароль"
-                value={pwd}
-                onChangeText={setPwd}
-                type="password"
-                secureTextEntry={!passwordVisible}
-                placeholderTextColor="#BDBDBD"
-              ></TextInput>
-              <TouchableOpacity
-                onPress={togglePasswordVisibility}
-                style={{ position: "absolute", right: 10, top: 180 }}
-              >
-                <FontAwesome
-                  name={passwordVisible ? "eye" : "eye-slash"}
-                  size={24}
-                  color="#BDBDBD"
-                  style={[{ marginRight: 20 }]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={onLogin}>
-                <Text style={styles.buttonText}>Увійти</Text>
-              </TouchableOpacity>
-              <Text style={styles.textLogin} onPress={goToReg}>
-                Немає акаунту? Зареєструватися
-              </Text>
-            </View>
+        <View style={styles.overlay}>
+          <View style={[styles.bg, isKeyboardOpen && styles.bgOpen]}>
+            <Text style={styles.text}>Увійти</Text>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 100 },
+              ]}
+              placeholder="Адреса електронної пошти"
+              value={eml}
+              onChangeText={setEml}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TextInput
+              style={[
+                styles.input,
+                { paddingLeft: 16, fontSize: 16, top: 166 },
+              ]}
+              placeholder="Пароль"
+              value={pwd}
+              onChangeText={setPwd}
+              type="password"
+              secureTextEntry={!passwordVisible}
+              placeholderTextColor="#BDBDBD"
+            ></TextInput>
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={{ position: "absolute", right: 10, top: 180 }}
+            >
+              <FontAwesome
+                name={passwordVisible ? "eye" : "eye-slash"}
+                size={24}
+                color="#BDBDBD"
+                style={[{ marginRight: 20 }]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={onLogin}>
+              <Text style={styles.buttonText}>Увійти</Text>
+            </TouchableOpacity>
+            <Text style={styles.textLogin} onPress={goToReg}>
+              Немає акаунту? Зареєструватися
+            </Text>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </ImageBackground>
     </View>
   );

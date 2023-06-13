@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   View,
@@ -6,8 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
+  Keyboard,
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -24,8 +23,26 @@ const CreatePostsScreen = () => {
   const [locality, setLocality] = useState("");
   const [urlPhoto, setUrlPhoto] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const type = Camera.Constants.Type.back;
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setIsKeyboardOpen(true)
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setIsKeyboardOpen(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -66,7 +83,7 @@ const CreatePostsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isKeyboardOpen && styles.bgOpen]}>
       <MaterialIcons
         style={styles.logout}
         name="arrow-back"
@@ -99,32 +116,25 @@ const CreatePostsScreen = () => {
         <Image source={{ uri: urlPhoto }} style={styles.image}></Image>
       </Camera>
       <Text style={styles.text}>Завантажте фото</Text>
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-      >
-        <TextInput
-          style={[styles.input, { fontSize: 16, marginTop: 48 }]}
-          placeholder="Назва..."
-          value={namePhoto}
-          onChangeText={setNamePhoto}
-          placeholderTextColor="#BDBDBD"
-        ></TextInput>
-      </KeyboardAvoidingView>
+
+      <TextInput
+        style={[styles.input, { fontSize: 16, marginTop: 48 }]}
+        placeholder="Назва..."
+        value={namePhoto}
+        onChangeText={setNamePhoto}
+        placeholderTextColor="#BDBDBD"
+      ></TextInput>
+
       <View style={styles.lineInput} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-      >
-        <TextInput
-          style={[
-            styles.input,
-            { fontSize: 16, marginTop: 32, paddingLeft: 30 },
-          ]}
-          placeholder="Місцевість..."
-          value={locality}
-          onChangeText={setLocality}
-          placeholderTextColor="#BDBDBD"
-        ></TextInput>
-      </KeyboardAvoidingView>
+
+      <TextInput
+        style={[styles.input, { fontSize: 16, marginTop: 32, paddingLeft: 30 }]}
+        placeholder="Місцевість..."
+        value={locality}
+        onChangeText={setLocality}
+        placeholderTextColor="#BDBDBD"
+      ></TextInput>
+
       <MaterialIcons
         style={styles.localIcon}
         name="location-pin"
@@ -165,6 +175,9 @@ const styles = StyleSheet.create({
     marginTop: 55,
     flex: 1,
     alignItems: "center",
+  },
+  bgOpen: {
+    top: -40,
   },
   title: {
     position: "absolute",
