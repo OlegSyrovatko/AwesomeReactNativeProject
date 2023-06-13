@@ -98,17 +98,13 @@ const PostsScreen = ({ navigation }) => {
                   />
                 </TouchableOpacity>
               )}
-              {localityPic && <Text> {localityPic}</Text>}
+              {localityPic && (
+                <Text style={styles.locality}> {localityPic}</Text>
+              )}
             </View>
           </View>
         )}
       </View>
-
-      {/* <Text>localityPic {localityPic}</Text>
-          <Text>
-            latitude {latitude}
-            longitude {longitude}
-          </Text> */}
     </View>
   );
 };
@@ -210,6 +206,11 @@ const styles = StyleSheet.create({
   comment: {
     color: "#BDBDBD",
     fontSize: 16,
+  },
+  locality: {
+    color: "#212121",
+    fontSize: 16,
+    lineHeight: 19,
   },
 });
 
