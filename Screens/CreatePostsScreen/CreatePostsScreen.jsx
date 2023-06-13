@@ -34,7 +34,12 @@ const CreatePostsScreen = () => {
         console.log("No access to camera");
       }
 
-      setHasPermission(status === "granted");
+      const { status: cameraStatus } = await Camera.requestPermissionsAsync();
+      if (cameraStatus !== "granted") {
+        console.log("No access to camera");
+      }
+
+      setHasPermission(status === "granted" && cameraStatus === "granted");
     })();
   }, []);
 
