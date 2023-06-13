@@ -1,7 +1,16 @@
 import React from "react";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+
+import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
+
 import avatarIcon from "../../assets/avatarIcon.png";
 
 const PostsScreen = ({ navigation }) => {
@@ -42,35 +51,76 @@ const PostsScreen = ({ navigation }) => {
       />
       <Text style={styles.title}>Публікації</Text>
       <View style={styles.line} />
-      <View style={styles.user}>
-        <ImageBackground
-          source={avatarIcon}
-          resizeMode="cover"
-          style={styles.imageAvatar}
-        ></ImageBackground>
-        <View style={styles.userItems}>
-          <Text style={styles.userName}>Natali Romanova</Text>
-          <Text style={styles.userEml}>email@example.com</Text>
+      <View style={styles.content}>
+        <View style={styles.user}>
+          <ImageBackground
+            source={avatarIcon}
+            resizeMode="cover"
+            style={styles.imageAvatar}
+          ></ImageBackground>
+          <View style={styles.userItems}>
+            <Text style={styles.userName}>Natali Romanova</Text>
+            <Text style={styles.userEml}>email@example.com</Text>
+          </View>
         </View>
+
+        {urlPic && (
+          <Image source={{ uri: urlPic }} style={styles.image}></Image>
+        )}
+        {NamePic && <Text style={styles.namePic}>{NamePic}</Text>}
+        {urlPic && (
+          <View style={styles.photoDetail}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Comments");
+              }}
+            >
+              <View style={styles.commentBlock}>
+                <FontAwesome name="comment-o" size={24} color="#BDBDBD" />
+                <Text style={styles.comment}>1</Text>
+              </View>
+            </TouchableOpacity>
+            <View style={styles.commentBlock}>
+              {latitude && longitude && (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Map", {
+                      latitude,
+                      longitude,
+                    });
+                  }}
+                >
+                  <MaterialIcons
+                    style={styles.localIcon}
+                    name="location-pin"
+                    size={24}
+                    color="rgba(189, 189, 189, 1)"
+                  />
+                </TouchableOpacity>
+              )}
+              {localityPic && <Text> {localityPic}</Text>}
+            </View>
+          </View>
+        )}
       </View>
 
-      {/* {urlPic && (
-        <>
-          <Text>NamePic {NamePic}</Text>
-          <Text>localityPic {localityPic}</Text>
+      {/* <Text>localityPic {localityPic}</Text>
           <Text>
             latitude {latitude}
             longitude {longitude}
-          </Text>
-          <Text>urlPic {urlPic}</Text>
-        </>
-      )} */}
+          </Text> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { marginTop: 55 },
+  container: {
+    marginTop: 55,
+  },
+  content: {
+    left: "50%",
+    marginLeft: -172,
+  },
   title: {
     position: "absolute",
     height: 22,
@@ -104,14 +154,13 @@ const styles = StyleSheet.create({
   imageAvatar: {
     width: 60,
     height: 60,
-    radius: 16,
+    borderRadius: 16,
   },
   user: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     marginTop: 32,
-    marginLeft: 16,
     gap: 8,
   },
   userItems: {
@@ -120,7 +169,6 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontFamily: "Roboto",
-    fontStyle: "Bold",
     fontSize: 13,
     lineHeight: 15,
   },
@@ -129,6 +177,39 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 13,
     color: "rgba(33, 33, 33, 0.8)",
+  },
+  image: {
+    marginTop: 32,
+    width: 343,
+    height: 240,
+    borderRadius: 8,
+  },
+  namePic: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    marginTop: 8,
+    width: 343,
+  },
+  photoDetail: {
+    marginTop: 11,
+    display: "flex",
+    flexDirection: "row",
+    width: 343,
+    justifyContent: "space-between",
+  },
+
+  commentBlock: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+
+    gap: 9,
+  },
+  comment: {
+    color: "#BDBDBD",
+    fontSize: 16,
   },
 });
 
