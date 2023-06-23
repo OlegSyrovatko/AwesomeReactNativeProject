@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
+import auth from "../config";
 
 import {
   ImageBackground,
@@ -22,7 +25,33 @@ const RegistrationScreen = ({ navigation }) => {
   const [lgn, setLgn] = useState("");
   const [eml, setEml] = useState("");
   const [pwd, setPwd] = useState("");
+  const registerDB = async ({ email, password }) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      throw error;
+    }
+  };
+  // const onReg = () => {
+  //   registerDB({ email: eml, password: pwd })
+  //     .then(() => {
+  //       console.log("Registration successful");
+  //       navigation.navigate("Home");
+  //     })
+  //     .catch((error) => {
+  //       console.log("Registration failed", error);
+  //     });
+  // };
 
+  const onReg = async () => {
+    try {
+      await registerDB({ email: eml, password: pwd });
+      console.log("Registration successful");
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log("Registration failed", error);
+    }
+  };
   const goToLogin = () => {
     navigation.navigate("Login");
   };
@@ -48,10 +77,10 @@ const RegistrationScreen = ({ navigation }) => {
     };
   }, []);
 
-  const onReg = () => {
-    console.log("Credentials", `${lgn} + ${eml} + ${pwd}`);
-    navigation.navigate("Home");
-  };
+  // const onReg = () => {
+  //   console.log("Credentials", `${lgn} + ${eml} + ${pwd}`);
+  //   navigation.navigate("Home");
+  // };
 
   return (
     <View style={styles.container}>
