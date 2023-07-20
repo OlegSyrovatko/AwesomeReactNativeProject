@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 
 // Функція для підключення авторизації в проект
 import { getAuth } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 // Функція для підключення бази даних у проект
 import { getFirestore } from "firebase/firestore";
 // Функція для підключення сховища файлів в проект
@@ -23,7 +23,7 @@ const firebaseConfig = {
 // npm install -g firebase-tools
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 
 export const db = getFirestore(app);
