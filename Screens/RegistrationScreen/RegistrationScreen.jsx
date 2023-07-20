@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-// import {  createUserWithEmailAndPassword } from "firebase/auth";
-// const auth = getAuth("../config");
-// import auth from "";
 
-import firebaseConfig from "../config"; // This should contain your Firebase configuration
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-const auth = getAuth(firebaseConfig);
+import auth from "../../config";
 
 import {
   ImageBackground,
