@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../config";
 
 import {
@@ -27,13 +27,31 @@ const RegistrationScreen = ({ navigation }) => {
 
   const onReg = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, eml, pwd);
+      const currentUser = await createUserWithEmailAndPassword(auth, eml, pwd);
       console.log("Registration successful");
+
+      await updateDisplayName(lgn);
+
       navigation.navigate("Home");
     } catch (error) {
       console.log("Registration failed", error);
     }
   };
+
+  const updateDisplayName = async (displayName) => {
+    console.log("name", displayName);
+
+    updateProfile(auth.currentUser, {
+      displayName,
+    })
+      .then(() => {
+        console.log("Username is: " + displayName);
+      })
+      .catch((error) => {
+        console.log("An error occurred while updating the profile.");
+      });
+  };
+
   const goToLogin = () => {
     navigation.navigate("Login");
   };

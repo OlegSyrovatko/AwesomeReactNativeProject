@@ -49,8 +49,10 @@ const LoginScreen = ({ navigation }) => {
 
   const onLogin = async () => {
     try {
-      const credentials = await signInWithEmailAndPassword(auth, eml, pwd);
+      const currentUser = await signInWithEmailAndPassword(auth, eml, pwd);
+      // console.log(currentUser);
       console.log("Login successful");
+
       navigation.navigate("Home");
     } catch (error) {
       console.log("Login failed", error);
