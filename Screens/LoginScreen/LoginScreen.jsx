@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config";
 
 import {
   ImageBackground,
@@ -45,8 +47,14 @@ const LoginScreen = ({ navigation }) => {
     };
   }, []);
 
-  const onLogin = () => {
-    console.log("Credentials", `${eml} + ${pwd}`);
+  const onLogin = async () => {
+    try {
+      const credentials = await signInWithEmailAndPassword(auth, eml, pwd);
+      console.log("Login successful");
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log("Login failed", error);
+    }
     navigation.navigate("Home");
   };
 

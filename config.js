@@ -9,15 +9,26 @@ import { getFirestore } from "firebase/firestore";
 // Функція для підключення сховища файлів в проект
 import { getStorage } from "firebase/storage";
 
+import Constants from "expo-constants";
+
+apiKey = Constants.manifest?.extra?.firebaseApiKey;
+authDomain = Constants.manifest?.extra?.firebaseAuthDomain;
+databaseURL = Constants.manifest?.extra?.firebaseDatabaseURL;
+projectId = Constants.manifest?.extra?.firebaseProjectId;
+storageBucket = Constants.manifest?.extra?.firebaseStorageBucket;
+messagingSenderId = Constants.manifest?.extra?.firebaseMessagingSenderId;
+appId = Constants.manifest?.extra?.firebaseAppId;
+measurementId = Constants.manifest?.extra?.firebaseMeasurementId;
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDMNihuA0fZmEVeYaLu5aa6SIQrlSn72_E",
-  authDomain: "awesomereactnativeproject.firebaseapp.com",
-  databaseURL: "https://awesomereactnativeproject.firebaseio.com",
-  projectId: "awesomereactnativeproject",
-  storageBucket: "awesomereactnativeproject.appspot.com",
-  messagingSenderId: "585651538821",
-  appId: "1:585651538821:web:3012839d7fa768801a12ec",
-  measurementId: "G-T3RPJKQXKY",
+  apiKey,
+  authDomain,
+  databaseURL,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId,
 };
 
 // npm install -g firebase-tools
