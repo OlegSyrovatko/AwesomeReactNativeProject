@@ -8,15 +8,22 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { useSelector, useDispatch } from "react-redux";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
-
+import { setOffline } from "../../redux/reducers/Slice";
 import avatarIcon from "../../assets/avatarIcon.png";
 
 const PostsScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const goToLogin = () => {
+    dispatch(setOffline());
     navigation.navigate("Login");
   };
+
+  const userName = useSelector((state) => state.values.userName);
+  const email = useSelector((state) => state.values.email);
+  // const isLogin = useSelector((state) => state.values.isLogin);
 
   const route = useRoute();
   let NamePic;
@@ -59,8 +66,8 @@ const PostsScreen = ({ navigation }) => {
             style={styles.imageAvatar}
           ></ImageBackground>
           <View style={styles.userItems}>
-            <Text style={styles.userName}>Natali Romanova</Text>
-            <Text style={styles.userEml}>email@example.com</Text>
+            <Text style={styles.userName}>{userName}</Text>
+            <Text style={styles.userEml}>{email}</Text>
           </View>
         </View>
 

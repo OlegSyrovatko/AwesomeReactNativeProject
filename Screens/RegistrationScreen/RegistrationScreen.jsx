@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../config";
 
+import { useDispatch } from "react-redux";
+import { setUserData, setOnline } from "../../redux/reducers/Slice";
+
 import {
   ImageBackground,
   StyleSheet,
@@ -24,13 +27,14 @@ const RegistrationScreen = ({ navigation }) => {
   const [lgn, setLgn] = useState("");
   const [eml, setEml] = useState("");
   const [pwd, setPwd] = useState("");
+  const dispatch = useDispatch();
 
   const onReg = async () => {
     try {
-      const currentUser = await createUserWithEmailAndPassword(auth, eml, pwd);
+      await createUserWithEmailAndPassword(auth, eml, pwd);
       console.log("Registration successful");
 
-      await updateDisplayName(lgn);
+      await updateDisplayName(lgn, eml);
 
       navigation.navigate("Home");
     } catch (error) {
@@ -38,14 +42,19 @@ const RegistrationScreen = ({ navigation }) => {
     }
   };
 
-  const updateDisplayName = async (displayName) => {
-    console.log("name", displayName);
-
+  const updateDisplayName = async (name, email) => {
     updateProfile(auth.currentUser, {
-      displayName,
+      displayName: name,
     })
       .then(() => {
-        console.log("Username is: " + displayName);
+        dispatch(setOnline());
+        dispatch(
+          setUserData({
+            name,
+            email,
+          })
+        );
+        console.log("Username is: " + name);
       })
       .catch((error) => {
         console.log("An error occurred while updating the profile.");
