@@ -8,11 +8,25 @@ import {
   StyleSheet,
   Keyboard,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+
+import { collection, addDoc, getFirestore } from "firebase/firestore";
+
+const writeDataToFirestore = async (data) => {
+  try {
+    const db = getFirestore();
+    const docRef = await addDoc(collection(db, "posts"), data);
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
+};
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
@@ -26,6 +40,7 @@ const CreatePostsScreen = () => {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const type = Camera.Constants.Type.back;
+  const uid = useSelector((state) => state.values.uid);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -70,12 +85,22 @@ const CreatePostsScreen = () => {
 
   const onSubmit = async () => {
     let location = await Location.getCurrentPositionAsync({});
-    console.log(location);
-    console.log("Credentials", `${locality} + ${namePhoto} `);
-    console.log(location.coords.latitude);
-    console.log(location.coords.longitude);
-    console.log(urlPhoto);
+    // console.log(location);
+    // console.log("Credentials", `${locality} + ${namePhoto} `);
+    // console.log(location.coords.latitude);
+    // console.log(location.coords.longitude);
+    // console.log(urlPhoto);
+
+    await writeDataToFirestore({
+      uid,
+      namePhoto,
+      locality,
+      location,
+      urlPhoto,
+    });
+
     navigation.navigate("Posts", {
+      uid,
       namePhoto,
       locality,
       location,

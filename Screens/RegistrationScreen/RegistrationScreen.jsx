@@ -31,10 +31,10 @@ const RegistrationScreen = ({ navigation }) => {
 
   const onReg = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, eml, pwd);
+      const currentUser = await createUserWithEmailAndPassword(auth, eml, pwd);
       console.log("Registration successful");
 
-      await updateDisplayName(lgn, eml);
+      await updateDisplayName(currentUser.user.uid, lgn, eml);
 
       navigation.navigate("Home");
     } catch (error) {
@@ -42,7 +42,7 @@ const RegistrationScreen = ({ navigation }) => {
     }
   };
 
-  const updateDisplayName = async (name, email) => {
+  const updateDisplayName = async (uid, name, email) => {
     updateProfile(auth.currentUser, {
       displayName: name,
     })
@@ -50,6 +50,7 @@ const RegistrationScreen = ({ navigation }) => {
         dispatch(setOnline());
         dispatch(
           setUserData({
+            uid,
             name,
             email,
           })

@@ -11,7 +11,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
-import { setOffline } from "../../redux/reducers/slice";
+import { setOffline, setUserData } from "../../redux/reducers/slice";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config";
 import avatarIcon from "../../assets/avatarIcon.png";
@@ -23,6 +23,13 @@ const PostsScreen = ({ navigation }) => {
     signOut(auth)
       .then(() => {
         dispatch(setOffline());
+        dispatch(
+          setUserData({
+            uid: "",
+            name: "",
+            email: "",
+          })
+        );
       })
       .catch((error) => {
         console.error("Error logging out:", error);

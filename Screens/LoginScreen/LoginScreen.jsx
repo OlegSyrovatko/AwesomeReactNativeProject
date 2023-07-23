@@ -64,6 +64,7 @@ const LoginScreen = ({ navigation }) => {
       dispatch(setOnline());
       dispatch(
         setUserData({
+          uid: currentUser.user.uid,
           name: currentUser._tokenResponse.displayName,
           email: currentUser._tokenResponse.email,
         })
