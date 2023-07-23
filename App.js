@@ -3,13 +3,13 @@
 
 import "react-native-gesture-handler";
 import React from "react";
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { store, persistor } from "./redux/store";
-
+import AuthWrapper from "./AuthWrapper";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import Home from "./Screens/Home";
@@ -25,16 +25,18 @@ export default function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
-          <MainStack.Navigator
-            initialRouteName="Main"
-            screenOptions={{ headerShown: false }}
-          >
-            <MainStack.Screen name="Main" component={RegistrationScreen} />
-            <MainStack.Screen name="Login" component={LoginScreen} />
-            <MainStack.Screen name="Home" component={Home} />
-            <MainStack.Screen name="Comments" component={CommentsScreen} />
-            <MainStack.Screen name="Map" component={MapScreen} />
-          </MainStack.Navigator>
+          <AuthWrapper>
+            <MainStack.Navigator
+              initialRouteName="Main"
+              screenOptions={{ headerShown: false }}
+            >
+              <MainStack.Screen name="Main" component={RegistrationScreen} />
+              <MainStack.Screen name="Login" component={LoginScreen} />
+              <MainStack.Screen name="Home" component={Home} />
+              <MainStack.Screen name="Comments" component={CommentsScreen} />
+              <MainStack.Screen name="Map" component={MapScreen} />
+            </MainStack.Navigator>
+          </AuthWrapper>
         </NavigationContainer>
       </PersistGate>
     </Provider>

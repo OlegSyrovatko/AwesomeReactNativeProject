@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../config";
 
 import { useDispatch } from "react-redux";
-import { setUserData, setOnline } from "../../redux/reducers/Slice";
+import { setUserData, setOnline } from "../../redux/reducers/slice";
 
 import {
   ImageBackground,

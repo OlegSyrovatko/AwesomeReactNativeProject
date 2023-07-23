@@ -11,19 +11,26 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
-import { setOffline } from "../../redux/reducers/Slice";
+import { setOffline } from "../../redux/reducers/slice";
+import { signOut } from "firebase/auth";
+import { auth } from "../../config";
 import avatarIcon from "../../assets/avatarIcon.png";
 
 const PostsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+
   const goToLogin = () => {
-    dispatch(setOffline());
-    navigation.navigate("Login");
+    signOut(auth)
+      .then(() => {
+        dispatch(setOffline());
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error);
+      });
   };
 
   const userName = useSelector((state) => state.values.userName);
   const email = useSelector((state) => state.values.email);
-  // const isLogin = useSelector((state) => state.values.isLogin);
 
   const route = useRoute();
   let NamePic;

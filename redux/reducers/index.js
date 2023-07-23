@@ -1,5 +1,5 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import valuesReducer from "./Slice";
+import valuesReducer from "./slice";
 
 const rootReducer = combineReducers({
   values: valuesReducer,

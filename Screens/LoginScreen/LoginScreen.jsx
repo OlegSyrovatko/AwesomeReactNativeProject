@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../config";
 import { useDispatch } from "react-redux";
-import { setUserData, setOnline } from "../../redux/reducers/Slice";
+import { setUserData, setOnline } from "../../redux/reducers/slice";
 
 import {
   ImageBackground,
@@ -50,6 +50,14 @@ const LoginScreen = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigation.navigate("Home");
+      }
+    });
+  }, []);
+
   const onLogin = async () => {
     try {
       const currentUser = await signInWithEmailAndPassword(auth, eml, pwd);
@@ -61,8 +69,6 @@ const LoginScreen = ({ navigation }) => {
         })
       );
       console.log("Login successful");
-
-      navigation.navigate("Home");
     } catch (error) {
       console.log("Login failed", error);
     }

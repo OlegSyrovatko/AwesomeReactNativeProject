@@ -51,7 +51,8 @@ const CreatePostsScreen = () => {
         console.log("No access to camera");
       }
 
-      const { status: cameraStatus } = await Camera.requestPermissionsAsync();
+      const { status: cameraStatus } =
+        await Camera.requestCameraPermissionsAsync();
       if (cameraStatus !== "granted") {
         console.log("No access to camera");
       }
