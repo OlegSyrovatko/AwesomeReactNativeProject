@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,19 +6,61 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { useRoute } from "@react-navigation/native";
 import { setOffline, setUserData } from "../../redux/reducers/slice";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config";
 import avatarIcon from "../../assets/avatarIcon.png";
+import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 
 const PostsScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
+  const [posts, setPosts] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
+  useEffect(() => {
+    const unsubscribe = getDataFromFirestore();
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const getDataFromFirestore = () => {
+    const db = getFirestore();
+    const postsCollection = collection(db, "posts");
+
+    return onSnapshot(postsCollection, (snapshot) => {
+      const postsData = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+
+        postsData.push({
+          id: doc.id,
+          locality: data.locality,
+          namePhoto: data.namePhoto,
+          urlPhoto: data.urlPhoto,
+          latitude: data.location.coords.latitude,
+          longitude: data.location.coords.longitude,
+          date: data.date.seconds,
+        });
+      });
+
+      postsData.sort((a, b) => b.date - a.date);
+      setPosts(postsData);
+      setIsRefreshing(false);
+    });
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    getDataFromFirestore();
+  };
+
+  const dispatch = useDispatch();
   const goToLogin = () => {
     signOut(auth)
       .then(() => {
@@ -39,100 +81,90 @@ const PostsScreen = ({ navigation }) => {
   const userName = useSelector((state) => state.values.userName);
   const email = useSelector((state) => state.values.email);
 
-  const route = useRoute();
-  let NamePic;
-  let localityPic;
-  let latitude;
-  let longitude;
-  let urlPic;
-  if (route.params) {
-    if (route.params.namePhoto) {
-      NamePic = route.params.namePhoto;
-    }
-    if (route.params.locality) {
-      localityPic = route.params.locality;
-    }
-    if (route.params.location) {
-      latitude = route.params.location.coords.latitude;
-      longitude = route.params.location.coords.longitude;
-    }
-    if (route.params.urlPhoto) {
-      urlPic = route.params.urlPhoto;
-    }
-  }
-
   return (
-    <View style={styles.container}>
-      <MaterialIcons
-        style={styles.back}
-        name="logout"
-        size={24}
-        color="rgba(189, 189, 189, 1)"
-        onPress={goToLogin}
-      />
-      <Text style={styles.title}>Публікації</Text>
-      <View style={styles.line} />
-      <View style={styles.content}>
-        <View style={styles.user}>
-          <ImageBackground
-            source={avatarIcon}
-            resizeMode="cover"
-            style={styles.imageAvatar}
-          ></ImageBackground>
-          <View style={styles.userItems}>
-            <Text style={styles.userName}>{userName}</Text>
-            <Text style={styles.userEml}>{email}</Text>
-          </View>
-        </View>
-
-        {urlPic && (
-          <Image source={{ uri: urlPic }} style={styles.image}></Image>
-        )}
-        {NamePic && <Text style={styles.namePic}>{NamePic}</Text>}
-        {urlPic && (
-          <View style={styles.photoDetail}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Comments");
-              }}
-            >
-              <View style={styles.commentBlock}>
-                <FontAwesome name="comment-o" size={24} color="#BDBDBD" />
-                <Text style={styles.comment}>1</Text>
-              </View>
-            </TouchableOpacity>
-            <View style={styles.commentBlock}>
-              {latitude && longitude && (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Map", {
-                      latitude,
-                      longitude,
-                    });
-                  }}
-                >
-                  <MaterialIcons
-                    style={styles.localIcon}
-                    name="location-pin"
-                    size={24}
-                    color="rgba(189, 189, 189, 1)"
-                  />
-                </TouchableOpacity>
-              )}
-              {localityPic && (
-                <Text style={styles.locality}> {localityPic}</Text>
-              )}
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
+      <View style={styles.container}>
+        <MaterialIcons
+          style={styles.back}
+          name="logout"
+          size={24}
+          color="rgba(189, 189, 189, 1)"
+          onPress={goToLogin}
+        />
+        <Text style={styles.title}>Публікації</Text>
+        <View style={styles.line} />
+        <View style={styles.content}>
+          <View style={styles.user}>
+            <ImageBackground
+              source={avatarIcon}
+              resizeMode="cover"
+              style={styles.imageAvatar}
+            ></ImageBackground>
+            <View style={styles.userItems}>
+              <Text style={styles.userName}>{userName}</Text>
+              <Text style={styles.userEml}>{email}</Text>
             </View>
           </View>
-        )}
+          {posts.map((post) => (
+            <View key={post.id}>
+              {post.urlPhoto && (
+                <Image source={{ uri: post.urlPhoto }} style={styles.image} />
+              )}
+              {post.namePhoto && (
+                <Text style={styles.namePic}>{post.namePhoto}</Text>
+              )}
+              {post.urlPhoto && (
+                <View style={styles.photoDetail}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Comments");
+                    }}
+                  >
+                    <View style={styles.commentBlock}>
+                      <FontAwesome name="comment-o" size={24} color="#BDBDBD" />
+                      <Text style={styles.comment}>1</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.commentBlock}>
+                    {post.latitude && post.longitude && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("Map", {
+                            latitude: post.latitude,
+                            longitude: post.longitude,
+                          });
+                        }}
+                      >
+                        <MaterialIcons
+                          style={styles.localIcon}
+                          name="location-pin"
+                          size={24}
+                          color="rgba(189, 189, 189, 1)"
+                        />
+                      </TouchableOpacity>
+                    )}
+                    {post.locality && (
+                      <Text style={styles.locality}> {post.locality}</Text>
+                    )}
+                  </View>
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 55,
+    marginBottom: 30,
   },
   content: {
     left: "50%",

@@ -15,11 +15,19 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 
-import { collection, addDoc, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const writeDataToFirestore = async (data) => {
   try {
     const db = getFirestore();
+    data.date = serverTimestamp();
+    console.log(data.date);
+
     const docRef = await addDoc(collection(db, "posts"), data);
     console.log("Document written with ID: ", docRef.id);
   } catch (e) {
@@ -85,11 +93,6 @@ const CreatePostsScreen = () => {
 
   const onSubmit = async () => {
     let location = await Location.getCurrentPositionAsync({});
-    // console.log(location);
-    // console.log("Credentials", `${locality} + ${namePhoto} `);
-    // console.log(location.coords.latitude);
-    // console.log(location.coords.longitude);
-    // console.log(urlPhoto);
 
     await writeDataToFirestore({
       uid,
@@ -99,13 +102,7 @@ const CreatePostsScreen = () => {
       urlPhoto,
     });
 
-    navigation.navigate("Posts", {
-      uid,
-      namePhoto,
-      locality,
-      location,
-      urlPhoto,
-    });
+    navigation.navigate("Posts");
   };
 
   return (
