@@ -35,18 +35,22 @@ const PostsScreen = ({ navigation }) => {
 
     return onSnapshot(postsCollection, (snapshot) => {
       const postsData = [];
+      const commentCountsData = {};
       snapshot.forEach((doc) => {
         const data = doc.data();
 
-        postsData.push({
+        const post = {
           id: doc.id,
           locality: data.locality,
           namePhoto: data.namePhoto,
           urlPhoto: data.urlPhoto,
           latitude: data.location.coords.latitude,
           longitude: data.location.coords.longitude,
-          date: data.date.seconds,
-        });
+          commentCount: data.commentCount,
+          date: data.date,
+        };
+
+        postsData.push(post);
       });
 
       postsData.sort((a, b) => b.date - a.date);
@@ -121,12 +125,15 @@ const PostsScreen = ({ navigation }) => {
                 <View style={styles.photoDetail}>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("Comments");
+                      navigation.navigate("Comments", {
+                        postId: post.id,
+                        urlPhoto: post.urlPhoto,
+                      });
                     }}
                   >
                     <View style={styles.commentBlock}>
                       <FontAwesome name="comment-o" size={24} color="#BDBDBD" />
-                      <Text style={styles.comment}>1</Text>
+                      <Text style={styles.comment}>{post.commentCount}</Text>
                     </View>
                   </TouchableOpacity>
                   <View style={styles.commentBlock}>

@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
@@ -47,6 +49,7 @@ const CreatePostsScreen = () => {
   const [cameraRef, setCameraRef] = useState(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const type = Camera.Constants.Type.back;
   const uid = useSelector((state) => state.values.uid);
 
@@ -66,6 +69,10 @@ const CreatePostsScreen = () => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+  };
 
   useEffect(() => {
     (async () => {
@@ -102,85 +109,101 @@ const CreatePostsScreen = () => {
       urlPhoto,
     });
 
+    setNamePhoto("");
+    setLocality("");
+    setUrlPhoto(null);
+    setCameraRef(null);
+
     navigation.navigate("Posts");
   };
 
   return (
-    <View style={[styles.container, isKeyboardOpen && styles.bgOpen]}>
-      <MaterialIcons
-        style={styles.logout}
-        name="arrow-back"
-        size={24}
-        color="rgba(33, 33, 33, 0.8)"
-        onPress={goBack}
-      />
-      <Text style={styles.title}>Створити публікацію</Text>
-      <View style={styles.line} />
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
+      <View style={[styles.container]}>
+        <MaterialIcons
+          style={styles.back}
+          name="arrow-back"
+          size={24}
+          color="rgba(33, 33, 33, 0.8)"
+          onPress={goBack}
+        />
+        <Text style={styles.title}>Створити публікацію</Text>
+        <View style={styles.line} />
 
-      <Camera style={styles.cameraContainer} type={type} ref={setCameraRef}>
-        <View style={styles.cameraRound}>
-          <TouchableOpacity>
-            <MaterialIcons
-              style={styles.camera}
-              name="camera-alt"
-              size={24}
-              color="#BDBDBD"
-              onPress={async () => {
-                if (cameraRef) {
-                  const { uri } = await cameraRef.takePictureAsync();
+        <Camera style={styles.cameraContainer} type={type} ref={setCameraRef}>
+          <View style={styles.cameraRound}>
+            <TouchableOpacity>
+              <MaterialIcons
+                style={styles.camera}
+                name="camera-alt"
+                size={24}
+                color="#BDBDBD"
+                onPress={async () => {
+                  if (cameraRef) {
+                    const { uri } = await cameraRef.takePictureAsync();
 
-                  await MediaLibrary.createAssetAsync(uri);
-                  setUrlPhoto(uri);
-                }
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <Image source={{ uri: urlPhoto }} style={styles.image}></Image>
-      </Camera>
-      <Text style={styles.text}>Завантажте фото</Text>
+                    await MediaLibrary.createAssetAsync(uri);
+                    setUrlPhoto(uri);
+                  }
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <Image source={{ uri: urlPhoto }} style={styles.image}></Image>
+        </Camera>
+        <Text style={styles.text}>Завантажте фото</Text>
 
-      <TextInput
-        style={[styles.input, { fontSize: 16, marginTop: 48 }]}
-        placeholder="Назва..."
-        value={namePhoto}
-        onChangeText={setNamePhoto}
-        placeholderTextColor="#BDBDBD"
-      ></TextInput>
+        <TextInput
+          style={[styles.input, { fontSize: 16, marginTop: 48 }]}
+          placeholder="Назва..."
+          value={namePhoto}
+          onChangeText={setNamePhoto}
+          placeholderTextColor="#BDBDBD"
+        ></TextInput>
 
-      <View style={styles.lineInput} />
+        <View style={styles.lineInput} />
 
-      <TextInput
-        style={[styles.input, { fontSize: 16, marginTop: 32, paddingLeft: 30 }]}
-        placeholder="Місцевість..."
-        value={locality}
-        onChangeText={setLocality}
-        placeholderTextColor="#BDBDBD"
-      ></TextInput>
+        <TextInput
+          style={[
+            styles.input,
+            { fontSize: 16, marginTop: 32, paddingLeft: 30 },
+          ]}
+          placeholder="Місцевість..."
+          value={locality}
+          onChangeText={setLocality}
+          placeholderTextColor="#BDBDBD"
+        ></TextInput>
 
-      <MaterialIcons
-        style={styles.localIcon}
-        name="location-pin"
-        size={24}
-        color="rgba(189, 189, 189, 1)"
-      />
-      <View style={styles.lineInput} />
+        <MaterialIcons
+          style={styles.localIcon}
+          name="location-pin"
+          size={24}
+          color="rgba(189, 189, 189, 1)"
+        />
+        <View style={styles.lineInput} />
 
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
-        <Text style={styles.buttonText}>Опублікувати</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onSubmit}>
+          <Text style={styles.buttonText}>Опублікувати</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => {
-          setUrlPhoto(null);
-          setCameraRef(null);
-        }}
-      >
-        <View style={styles.trash}>
-          <Feather name="trash-2" size={24} color="#DADADA" />
-        </View>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          onPress={() => {
+            setUrlPhoto(null);
+            setCameraRef(null);
+            setNamePhoto("");
+            setLocality("");
+          }}
+        >
+          <View style={[styles.trash, isKeyboardOpen && styles.bgOpen]}>
+            <Feather name="trash-2" size={24} color="#DADADA" />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -200,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bgOpen: {
-    top: -40,
+    marginBottom: 70,
   },
   title: {
     position: "absolute",
@@ -220,7 +243,7 @@ const styles = StyleSheet.create({
 
     color: "#212121",
   },
-  logout: {
+  back: {
     position: "absolute",
     right: "89.33%",
     left: "4.27%",
@@ -316,6 +339,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderRadius: 20,
     marginTop: 100,
+    marginBottom: 20,
   },
 });
 
