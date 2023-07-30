@@ -1,5 +1,7 @@
 // start project for home network
 // npx expo start --tunnel
+// start project for expo server
+// npx expo start --dev-client --tunnel
 
 import "react-native-gesture-handler";
 import React from "react";
